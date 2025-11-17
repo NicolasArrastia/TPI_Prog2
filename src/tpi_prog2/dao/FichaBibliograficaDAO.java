@@ -9,19 +9,19 @@ import java.util.List;
 
 public class FichaBibliograficaDAO implements GenericDAO<FichaBibliografica> {
 
-    private static final String INSERT_SQL = "INSERT INTO ficha_bibliografica (isbn, clasificacion_dewey, estanteria, idioma, eliminado) "
+    private static final String INSERT_SQL = "INSERT INTO FichaBibliografica (isbn, clasificacionDewey, estanteria, idioma, eliminado) "
             +
             "VALUES (?, ?, ?, ?, FALSE)";
 
-    private static final String UPDATE_SQL = "UPDATE ficha_bibliografica SET isbn = ?, clasificacion_dewey = ?, estanteria = ?, idioma = ? "
+    private static final String UPDATE_SQL = "UPDATE FichaBibliografica SET isbn = ?, clasificacionDewey = ?, estanteria = ?, idioma = ? "
             +
-            "WHERE id = ?";
+            "WHERE id_ficha = ?";
 
-    private static final String DELETE_SQL = "UPDATE ficha_bibliografica SET eliminado = TRUE WHERE id = ?";
+    private static final String DELETE_SQL = "UPDATE FichaBibliografica SET eliminado = TRUE WHERE id_ficha = ?";
 
-    private static final String SELECT_BY_ID_SQL = "SELECT * FROM ficha_bibliografica WHERE id = ? AND eliminado = FALSE";
+    private static final String SELECT_BY_ID_SQL = "SELECT * FROM FichaBibliografica WHERE id_ficha = ? AND eliminado = FALSE";
 
-    private static final String SELECT_ALL_SQL = "SELECT * FROM ficha_bibliografica WHERE eliminado = FALSE";
+    private static final String SELECT_ALL_SQL = "SELECT * FROM FichaBibliografica WHERE eliminado = FALSE";
 
     @Override
     public void insertar(FichaBibliografica ficha) throws Exception {
@@ -128,10 +128,10 @@ public class FichaBibliograficaDAO implements GenericDAO<FichaBibliografica> {
 
     private FichaBibliografica mapToFicha(ResultSet rs) throws SQLException {
         return new FichaBibliografica(
-                rs.getInt("id"),
+                rs.getInt("id_ficha"),
                 rs.getBoolean("eliminado"),
                 rs.getString("isbn"),
-                rs.getString("clasificacion_dewey"),
+                rs.getString("clasificacionDewey"),
                 rs.getString("estanteria"),
                 rs.getString("idioma"));
     }

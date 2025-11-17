@@ -9,27 +9,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LibroDAO implements GenericDAO<Libro> {
-    private static final String INSERT_SQL = "INSERT INTO libros (titulo, autor, editorial, anio_edicion, ficha_id) " +
-            "VALUES (?, ?, ?, ?, ?)";
+    private static final String INSERT_SQL = "INSERT INTO Libro (titulo, autor, editorial, anioEdicion, id_ficha) VALUES (?, ?, ?, ?, ?)";
 
-    private static final String UPDATE_SQL = "UPDATE libros SET titulo = ?, autor = ?, editorial = ?, anio_edicion = ?, ficha_id = ? "
+    private static final String UPDATE_SQL = "UPDATE Libro SET titulo = ?, autor = ?, editorial = ?, anioEdicion = ?, id_ficha = ? WHERE id_libro = ?";
+
+    private static final String DELETE_SQL = "UPDATE Libro SET eliminado = TRUE WHERE id_libro = ?";
+
+    private static final String SELECT_BY_ID_SQL = "SELECT l.id_libro, l.titulo, l.autor, l.editorial, l.anioEdicion, l.id_ficha, "
             +
-            "WHERE id = ?";
+            "f.id_ficha AS f_id, f.isbn, f.clasificacionDewey, f.estanteria, f.idioma, f.eliminado AS f_eliminado " +
+            "FROM Libro l LEFT JOIN FichaBibliografica f ON l.id_ficha = f.id_ficha " +
+            "WHERE l.id_libro = ? AND l.eliminado = FALSE";
 
-    private static final String DELETE_SQL = "UPDATE libros SET eliminado = TRUE WHERE id = ?";
-
-    private static final String SELECT_BY_ID_SQL = "SELECT l.id, l.titulo, l.autor, l.editorial, l.anio_edicion, l.ficha_id, "
+    private static final String SELECT_ALL_SQL = "SELECT l.id_libro, l.titulo, l.autor, l.editorial, l.anioEdicion, l.id_ficha, "
             +
-            "f.id AS f_id, f.isbn, f.clasificacion_dewey, f.estanteria, f.idioma, f.eliminado AS f_eliminado " +
-            "FROM libros l LEFT JOIN ficha_bibliografica f ON l.ficha_id = f.id " +
-            "WHERE l.id = ? AND l.eliminado = FALSE";
-
-    private static final String SELECT_ALL_SQL = "SELECT l.id, l.titulo, l.autor, l.editorial, l.anio_edicion, l.ficha_id, "
-            +
-            "f.id AS f_id, f.isbn, f.clasificacion_dewey, f.estanteria, f.idioma, f.eliminado AS f_eliminado " +
-            "FROM libros l LEFT JOIN ficha_bibliografica f ON l.ficha_id = f.id " +
+            "f.id_ficha AS f_id, f.isbn, f.clasificacionDewey, f.estanteria, f.idioma, f.eliminado AS f_eliminado " +
+            "FROM Libro l LEFT JOIN FichaBibliografica f ON l.id_ficha = f.id_ficha " +
             "WHERE l.eliminado = FALSE";
-
 
     private final FichaBibliograficaDAO fichaDAO;
 
@@ -153,21 +149,22 @@ public class LibroDAO implements GenericDAO<Libro> {
 
     private Libro mapResultSetToLibro(ResultSet rs) throws SQLException {
         Libro libro = new Libro();
-        libro.setId(rs.getInt("id"));
+        libro.setId(rs.getInt("id_libro"));
         libro.setTitulo(rs.getString("titulo"));
         libro.setAutor(rs.getString("autor"));
         libro.setEditorial(rs.getString("editorial"));
-        libro.setAnioEdicion(rs.getInt("anio_edicion"));
+        libro.setAnioEdicion(rs.getInt("anioEdicion"));
 
-        int fichaId = rs.getInt("ficha_id");
+        int fichaId = rs.getInt("id_ficha");
         if (fichaId > 0 && !rs.wasNull()) {
             FichaBibliografica ficha = new FichaBibliografica(
                     rs.getInt("f_id"),
                     rs.getBoolean("f_eliminado"),
                     rs.getString("isbn"),
-                    rs.getString("clasificacion_dewey"),
+                    rs.getString("clasificacionDewey"),
                     rs.getString("estanteria"),
                     rs.getString("idioma"));
+
             libro.setFichaBibliografica(ficha);
         }
 
