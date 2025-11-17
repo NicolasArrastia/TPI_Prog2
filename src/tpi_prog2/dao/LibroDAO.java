@@ -9,34 +9,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LibroDAO implements GenericDAO<Libro> {
-
-    private static final String INSERT_SQL =
-            "INSERT INTO libros (titulo, autor, editorial, anio_edicion, ficha_id) " +
+    private static final String INSERT_SQL = "INSERT INTO libros (titulo, autor, editorial, anio_edicion, ficha_id) " +
             "VALUES (?, ?, ?, ?, ?)";
 
-    private static final String UPDATE_SQL =
-            "UPDATE libros SET titulo = ?, autor = ?, editorial = ?, anio_edicion = ?, ficha_id = ? " +
+    private static final String UPDATE_SQL = "UPDATE libros SET titulo = ?, autor = ?, editorial = ?, anio_edicion = ?, ficha_id = ? "
+            +
             "WHERE id = ?";
 
-    private static final String DELETE_SQL =
-            "UPDATE libros SET eliminado = TRUE WHERE id = ?";
+    private static final String DELETE_SQL = "UPDATE libros SET eliminado = TRUE WHERE id = ?";
 
-    private static final String SELECT_BY_ID_SQL =
-            "SELECT l.id, l.titulo, l.autor, l.editorial, l.anio_edicion, l.ficha_id, " +
+    private static final String SELECT_BY_ID_SQL = "SELECT l.id, l.titulo, l.autor, l.editorial, l.anio_edicion, l.ficha_id, "
+            +
             "f.id AS f_id, f.isbn, f.clasificacion_dewey, f.estanteria, f.idioma, f.eliminado AS f_eliminado " +
             "FROM libros l LEFT JOIN ficha_bibliografica f ON l.ficha_id = f.id " +
             "WHERE l.id = ? AND l.eliminado = FALSE";
 
-    private static final String SELECT_ALL_SQL =
-            "SELECT l.id, l.titulo, l.autor, l.editorial, l.anio_edicion, l.ficha_id, " +
+    private static final String SELECT_ALL_SQL = "SELECT l.id, l.titulo, l.autor, l.editorial, l.anio_edicion, l.ficha_id, "
+            +
             "f.id AS f_id, f.isbn, f.clasificacion_dewey, f.estanteria, f.idioma, f.eliminado AS f_eliminado " +
             "FROM libros l LEFT JOIN ficha_bibliografica f ON l.ficha_id = f.id " +
             "WHERE l.eliminado = FALSE";
 
+
+    private final FichaBibliograficaDAO fichaDAO;
+
+    public LibroDAO(FichaBibliograficaDAO fichaDAO) {
+        if (fichaDAO == null) {
+            throw new IllegalArgumentException("FichaDAO no puede ser null");
+        }
+        this.fichaDAO = fichaDAO;
+    }
+
     @Override
     public void insertar(Libro libro) throws Exception {
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS)) {
+                PreparedStatement stmt = conn.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
             setLibroParameters(stmt, libro);
             stmt.executeUpdate();
@@ -56,7 +63,7 @@ public class LibroDAO implements GenericDAO<Libro> {
     @Override
     public void actualizar(Libro libro) throws Exception {
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(UPDATE_SQL)) {
+                PreparedStatement stmt = conn.prepareStatement(UPDATE_SQL)) {
 
             stmt.setString(1, libro.getTitulo());
             stmt.setString(2, libro.getAutor());
@@ -75,7 +82,7 @@ public class LibroDAO implements GenericDAO<Libro> {
     @Override
     public void eliminar(int id) throws Exception {
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(DELETE_SQL)) {
+                PreparedStatement stmt = conn.prepareStatement(DELETE_SQL)) {
 
             stmt.setInt(1, id);
             int rows = stmt.executeUpdate();
@@ -89,7 +96,7 @@ public class LibroDAO implements GenericDAO<Libro> {
     @Override
     public Libro getById(int id) throws Exception {
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID_SQL)) {
+                PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID_SQL)) {
 
             stmt.setInt(1, id);
 
@@ -107,8 +114,8 @@ public class LibroDAO implements GenericDAO<Libro> {
         List<Libro> libros = new ArrayList<>();
 
         try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(SELECT_ALL_SQL)) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(SELECT_ALL_SQL)) {
 
             while (rs.next()) {
                 libros.add(mapResultSetToLibro(rs));
@@ -160,11 +167,10 @@ public class LibroDAO implements GenericDAO<Libro> {
                     rs.getString("isbn"),
                     rs.getString("clasificacion_dewey"),
                     rs.getString("estanteria"),
-                    rs.getString("idioma")
-            );
+                    rs.getString("idioma"));
             libro.setFichaBibliografica(ficha);
         }
 
-        return libro;
-    }
+        return libro;
+    }
 }

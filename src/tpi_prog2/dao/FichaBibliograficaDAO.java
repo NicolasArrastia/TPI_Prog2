@@ -9,27 +9,24 @@ import java.util.List;
 
 public class FichaBibliograficaDAO implements GenericDAO<FichaBibliografica> {
 
-    private static final String INSERT_SQL =
-            "INSERT INTO ficha_bibliografica (isbn, clasificacion_dewey, estanteria, idioma, eliminado) " +
+    private static final String INSERT_SQL = "INSERT INTO ficha_bibliografica (isbn, clasificacion_dewey, estanteria, idioma, eliminado) "
+            +
             "VALUES (?, ?, ?, ?, FALSE)";
 
-    private static final String UPDATE_SQL =
-            "UPDATE ficha_bibliografica SET isbn = ?, clasificacion_dewey = ?, estanteria = ?, idioma = ? " +
+    private static final String UPDATE_SQL = "UPDATE ficha_bibliografica SET isbn = ?, clasificacion_dewey = ?, estanteria = ?, idioma = ? "
+            +
             "WHERE id = ?";
 
-    private static final String DELETE_SQL =
-            "UPDATE ficha_bibliografica SET eliminado = TRUE WHERE id = ?";
+    private static final String DELETE_SQL = "UPDATE ficha_bibliografica SET eliminado = TRUE WHERE id = ?";
 
-    private static final String SELECT_BY_ID_SQL =
-            "SELECT * FROM ficha_bibliografica WHERE id = ? AND eliminado = FALSE";
+    private static final String SELECT_BY_ID_SQL = "SELECT * FROM ficha_bibliografica WHERE id = ? AND eliminado = FALSE";
 
-    private static final String SELECT_ALL_SQL =
-            "SELECT * FROM ficha_bibliografica WHERE eliminado = FALSE";
+    private static final String SELECT_ALL_SQL = "SELECT * FROM ficha_bibliografica WHERE eliminado = FALSE";
 
     @Override
     public void insertar(FichaBibliografica ficha) throws Exception {
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS)) {
+                PreparedStatement stmt = conn.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
             setFichaParams(stmt, ficha);
             stmt.executeUpdate();
@@ -49,7 +46,7 @@ public class FichaBibliograficaDAO implements GenericDAO<FichaBibliografica> {
     @Override
     public void actualizar(FichaBibliografica ficha) throws Exception {
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(UPDATE_SQL)) {
+                PreparedStatement stmt = conn.prepareStatement(UPDATE_SQL)) {
 
             stmt.setString(1, ficha.getIsbn());
             stmt.setString(2, ficha.getClasificacionDewey());
@@ -67,7 +64,7 @@ public class FichaBibliograficaDAO implements GenericDAO<FichaBibliografica> {
     @Override
     public void eliminar(int id) throws Exception {
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(DELETE_SQL)) {
+                PreparedStatement stmt = conn.prepareStatement(DELETE_SQL)) {
 
             stmt.setInt(1, id);
             int rows = stmt.executeUpdate();
@@ -81,7 +78,7 @@ public class FichaBibliograficaDAO implements GenericDAO<FichaBibliografica> {
     @Override
     public FichaBibliografica getById(int id) throws Exception {
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID_SQL)) {
+                PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID_SQL)) {
 
             stmt.setInt(1, id);
 
@@ -95,16 +92,18 @@ public class FichaBibliograficaDAO implements GenericDAO<FichaBibliografica> {
     }
 
     @Override
-    public List<FichaBibliografica> getAll() throws Exception {
+    public List<FichaBibliografica> getAll() {
         List<FichaBibliografica> fichas = new ArrayList<>();
 
         try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(SELECT_ALL_SQL)) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(SELECT_ALL_SQL)) {
 
             while (rs.next()) {
                 fichas.add(mapToFicha(rs));
             }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving fichas", e);
         }
 
         return fichas;
@@ -134,7 +133,6 @@ public class FichaBibliograficaDAO implements GenericDAO<FichaBibliografica> {
                 rs.getString("isbn"),
                 rs.getString("clasificacion_dewey"),
                 rs.getString("estanteria"),
-                rs.getString("idioma")
-        );
-    }
+                rs.getString("idioma"));
+    }
 }
