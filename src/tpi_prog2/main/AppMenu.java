@@ -75,7 +75,7 @@ public class AppMenu {
      */
     private LibroServiceImpl createLibroService() {
         FichaBibliograficaDAO fichaDAO = new FichaBibliograficaDAO();
-        LibroDAO libroDAO = new LibroDAO(fichaDAO);
+        LibroDAO libroDAO = new LibroDAO();
 
         FichaBibliograficaServiceImpl fichaService = new FichaBibliograficaServiceImpl(fichaDAO);
         return new LibroServiceImpl(libroDAO, fichaService);
