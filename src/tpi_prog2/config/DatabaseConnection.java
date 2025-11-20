@@ -29,7 +29,6 @@ public final class DatabaseConnection {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
-    // Nuevo: permite controlar autoCommit para manejar transacciones manuales
     public static Connection getConnection(boolean autoCommit) throws SQLException {
         Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
         conn.setAutoCommit(autoCommit);

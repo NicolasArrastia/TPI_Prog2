@@ -9,10 +9,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-/**
- * MenuHandler para Libros y FichaBibliografica.
- * Maneja toda la interacción de consola.
- */
 public class MenuHandler {
 
     private final Scanner scanner;
@@ -26,9 +22,6 @@ public class MenuHandler {
         this.libroService = libroService;
     }
 
-    // ============================================================
-    // 1. CREAR LIBRO
-    // ============================================================
     public void crearLibro() {
         try {
             System.out.print("Título: ");
@@ -59,9 +52,6 @@ public class MenuHandler {
         }
     }
 
-    // ============================================================
-    // 2. LISTAR LIBROS
-    // ============================================================
     public void listarLibros() {
         try {
             System.out.print("¿Desea (1) listar todos o (2) buscar por título/autor?: ");
@@ -112,9 +102,6 @@ public class MenuHandler {
         }
     }
 
-    // ============================================================
-    // 3. ACTUALIZAR LIBRO
-    // ============================================================
     public void actualizarLibro() {
         try {
             System.out.print("ID del libro: ");
@@ -151,9 +138,6 @@ public class MenuHandler {
         }
     }
 
-    // ============================================================
-    // 4. ELIMINAR LIBRO
-    // ============================================================
     public void eliminarLibro() {
         try {
             System.out.print("ID a eliminar: ");
@@ -165,9 +149,6 @@ public class MenuHandler {
         }
     }
 
-    // ============================================================
-    // 5. CREAR FICHA INDEPENDIENTE
-    // ============================================================
     public void crearFichaIndependiente() {
         try {
             FichaBibliografica f = crearFicha();
@@ -178,9 +159,6 @@ public class MenuHandler {
         }
     }
 
-    // ============================================================
-    // 6. LISTAR FICHAS
-    // ============================================================
     public void listarFichas() {
         try {
             List<FichaBibliografica> fichas = libroService.getFichaService().getAll();
@@ -203,9 +181,6 @@ public class MenuHandler {
         }
     }
 
-    // ============================================================
-    // 7. ACTUALIZAR FICHA POR ID
-    // ============================================================
     public void actualizarFichaPorId() {
         try {
             System.out.print("ID de ficha: ");
@@ -241,9 +216,6 @@ public class MenuHandler {
         }
     }
 
-    // ============================================================
-    // 8. ELIMINAR FICHA POR ID
-    // ============================================================
     public void eliminarFichaPorId() {
         try {
             System.out.print("ID de ficha: ");
@@ -255,9 +227,6 @@ public class MenuHandler {
         }
     }
 
-    // ============================================================
-    // 9. ACTUALIZAR FICHA DE LIBRO (MENÚ)
-    // ============================================================
     public void actualizarFichaDeLibro() {
         try {
             System.out.print("ID del libro: ");
@@ -279,9 +248,6 @@ public class MenuHandler {
         }
     }
 
-    // ============================================================
-    // 10. ELIMINAR FICHA DEL LIBRO (SEGURO)
-    // ============================================================
     public void eliminarFichaDeLibro() {
         try {
             System.out.print("ID del libro: ");
@@ -310,9 +276,6 @@ public class MenuHandler {
         }
     }
 
-    // ============================================================
-    // MÉTODOS PRIVADOS
-    // ============================================================
     private FichaBibliografica crearFicha() {
         System.out.print("ISBN: ");
         String isbn = scanner.nextLine().trim();

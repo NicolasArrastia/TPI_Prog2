@@ -24,9 +24,8 @@ public class LibroServiceImpl implements GenericService<Libro> {
         validateLibro(libro);
         Connection conn = null;
         try {
-            conn = DatabaseConnection.getConnection(false); // autoCommit = false
+            conn = DatabaseConnection.getConnection(false);
 
-            // insertar/actualizar ficha usando la misma conexión
             if (libro.getFichaBibliografica() != null) {
                 if (libro.getFichaBibliografica().getId() == 0) {
                     fichaService.insertar(libro.getFichaBibliografica(), conn);
@@ -35,7 +34,6 @@ public class LibroServiceImpl implements GenericService<Libro> {
                 }
             }
 
-            // insertar libro (usa la misma conn)
             libroDAO.insertTransaccion(libro, conn);
 
             conn.commit();
@@ -56,7 +54,6 @@ public class LibroServiceImpl implements GenericService<Libro> {
         try {
             conn = DatabaseConnection.getConnection(false);
 
-            // actualizar/insertar ficha usando la misma conexión
             if (libro.getFichaBibliografica() != null) {
                 if (libro.getFichaBibliografica().getId() == 0) {
                     fichaService.insertar(libro.getFichaBibliografica(), conn);
@@ -65,7 +62,6 @@ public class LibroServiceImpl implements GenericService<Libro> {
                 }
             }
 
-            // actualizar libro con la misma conn
             libroDAO.actualizarTransaccion(libro, conn);
 
             conn.commit();

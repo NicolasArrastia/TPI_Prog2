@@ -24,10 +24,6 @@ public class FichaBibliograficaDAO implements GenericDAO<FichaBibliografica> {
     private static final String SELECT_ALL_SQL =
             "SELECT * FROM FichaBibliografica WHERE eliminado = FALSE";
 
-
-    // -----------------------
-    //  Métodos no transaccionales
-    // -----------------------
     @Override
     public void insertar(FichaBibliografica ficha) throws Exception {
         try (Connection conn = DatabaseConnection.getConnection();
@@ -55,10 +51,6 @@ public class FichaBibliograficaDAO implements GenericDAO<FichaBibliografica> {
         }
     }
 
-    // -----------------------
-    //  Métodos transaccionales (reciben Connection)
-    //  No hacen commit/rollback ni cierran la conexión.
-    // -----------------------
     @Override
     public void insertTransaccion(FichaBibliografica ficha, Connection conn) throws Exception {
         try (PreparedStatement stmt = conn.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS)) {
@@ -82,9 +74,6 @@ public class FichaBibliograficaDAO implements GenericDAO<FichaBibliografica> {
         }
     }
 
-    // -----------------------
-    //  Otros
-    // -----------------------
     @Override
     public void eliminar(int id) throws Exception {
         try (Connection conn = DatabaseConnection.getConnection();
@@ -120,9 +109,6 @@ public class FichaBibliograficaDAO implements GenericDAO<FichaBibliografica> {
         return fichas;
     }
 
-    // -----------------------
-    // Helpers
-    // -----------------------
     private void setFichaParams(PreparedStatement stmt, FichaBibliografica f) throws SQLException {
         stmt.setString(1, f.getIsbn());
         stmt.setString(2, f.getClasificacionDewey());

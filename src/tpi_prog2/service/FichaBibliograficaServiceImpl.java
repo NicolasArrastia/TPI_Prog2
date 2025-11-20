@@ -15,9 +15,6 @@ public class FichaBibliograficaServiceImpl implements GenericService<FichaBiblio
         this.fichaDAO = fichaDAO;
     }
 
-    // -----------------------
-    // Métodos normales (sin Connection)
-    // -----------------------
     @Override
     public void insertar(FichaBibliografica ficha) throws Exception {
         validateFicha(ficha);
@@ -31,9 +28,6 @@ public class FichaBibliograficaServiceImpl implements GenericService<FichaBiblio
         fichaDAO.actualizar(ficha);
     }
 
-    // -----------------------
-    // Métodos transaccionales (llamados desde LibroService con la misma Connection)
-    // -----------------------
     public void insertar(FichaBibliografica ficha, Connection conn) throws Exception {
         validateFicha(ficha);
         fichaDAO.insertTransaccion(ficha, conn);
@@ -45,9 +39,6 @@ public class FichaBibliograficaServiceImpl implements GenericService<FichaBiblio
         fichaDAO.actualizarTransaccion(ficha, conn);
     }
 
-    // -----------------------
-    // Resto del CRUD
-    // -----------------------
     @Override
     public void eliminar(int id) throws Exception {
         if (id <= 0) throw new IllegalArgumentException("ID inválido");
@@ -65,9 +56,6 @@ public class FichaBibliograficaServiceImpl implements GenericService<FichaBiblio
         return fichaDAO.getAll();
     }
 
-    // -----------------------
-    // Helpers
-    // -----------------------
     private void validateFicha(FichaBibliografica ficha) {
         if (ficha == null) throw new IllegalArgumentException("Ficha null");
         if (ficha.getIsbn() == null || ficha.getIsbn().isBlank())

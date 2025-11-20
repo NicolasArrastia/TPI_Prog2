@@ -31,11 +31,6 @@ public class LibroDAO implements GenericDAO<Libro> {
             "FROM Libro l LEFT JOIN FichaBibliografica f ON l.id_ficha = f.id_ficha " +
             "WHERE l.eliminado = FALSE";
 
-   
-
-    // -----------------------
-    // Métodos NO transaccionales
-    // -----------------------
     @Override
     public void insertar(Libro libro) throws Exception {
         try (Connection conn = DatabaseConnection.getConnection();
@@ -64,9 +59,6 @@ public class LibroDAO implements GenericDAO<Libro> {
         }
     }
 
-    // -----------------------
-    // Métodos transaccionales
-    // -----------------------
     @Override
     public void insertTransaccion(Libro libro, Connection conn) throws Exception {
         try (PreparedStatement stmt = conn.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS)) {
@@ -91,9 +83,6 @@ public class LibroDAO implements GenericDAO<Libro> {
         }
     }
 
-    // -----------------------
-    // Otros CRUD
-    // -----------------------
     @Override
     public void eliminar(int id) throws Exception {
         try (Connection conn = DatabaseConnection.getConnection();
@@ -129,9 +118,6 @@ public class LibroDAO implements GenericDAO<Libro> {
         return libros;
     }
 
-    // -----------------------
-    // Helpers
-    // -----------------------
     private void setLibroParameters(PreparedStatement stmt, Libro libro) throws SQLException {
         stmt.setString(1, libro.getTitulo());
         stmt.setString(2, libro.getAutor());
