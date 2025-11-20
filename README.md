@@ -241,3 +241,5 @@ La clase tpi_prog2.main.TestConexion permite verificar la conexión a la base:
 Si la conexión es exitosa, se mostrará información del usuario, base de datos y driver.
 
 ## 11. Enlace del video
+
+https://youtu.be/ssby3XFB6Kw
